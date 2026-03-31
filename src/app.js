@@ -1,22 +1,21 @@
-require('dotenv').config();
 const express = require("express");
-const multer = require("multer");
-const { vaultLogin } = require('./controllers/authController');
-const { authMiddleware } = require("./middlewares/auth");
-const sequelize = require('./config/database'); // Your Sequelize connection
 const app = express();
-const upload = multer();
-
+const sequelize = require("../src/config/database")
+const userRouter = require("./routes/userRoutes");
 app.use(express.json());
+require("./models/User"); // when we create table we need this  // for creating table use sequelize.sync();
 
-app.post('/vault-log-in', upload.none(), vaultLogin);
-app.get('/valut-dashboard', authMiddleware);
+app.use('/usermanage', userRouter);
 
-const PORT = 3000;
-sequelize.sync({ force: true })
+
+sequelize.authenticate()
     .then(() => {
-        app.listen(PORT, () => console.log(`🚀 Server on http://localhost:3000`));
+        console.log('database conneted sucessfully and creting table')
+        sequelize.sync();
+    }).then(() => {
+        app.listen(3000, () => {
+            console.log("server runing")
+        })
+    }).catch((err) => {
+        console.error(err, "Not Sync Properly")
     })
-    .catch(err => {
-        console.error('❌ Sync Error:', err.message);
-    });
