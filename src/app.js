@@ -3,11 +3,12 @@ const app = express();
 const sequelize = require("../src/config/database")
 const userRouter = require("./routes/userRoutes");
 const authRouter = require("./routes/authRouter");
+const authMiddleware = require("./middlewares/authMiddleware");
 app.use(express.json());
 require("./models/User"); // when we create table we need this  // for creating table use sequelize.sync();
 
 app.use('', authRouter)
-app.use('/usermanage',userRouter);
+app.use('/usermanage',authMiddleware,userRouter);
 
 
 sequelize.authenticate()

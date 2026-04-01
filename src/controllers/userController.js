@@ -12,7 +12,8 @@ const createUser = async (req, res, next) => {
 
     res.json({
         message: "data saved sucessfully",
-        data: data?.dataValues
+        data: data?.dataValues,
+        userId: req.user
     })
 }
 
@@ -31,7 +32,8 @@ const getUserById = async (req, res, next) => {
         }
         return res.status(200).json({
             message: "succesfully see and view",
-            data: userView
+            data: userView,
+            userId: req.user
         });
     }
     catch (err) {
@@ -42,7 +44,6 @@ const getUserById = async (req, res, next) => {
 }
 
 const getUserAll = async (req, res, next) => {
-    console.log(req.user, 'adfjaslkfjasd')
     try {
         const userList = await User.findAll();
         return res.status(200).json({
@@ -65,7 +66,8 @@ const deleteUser = async (req, res, next) => {
         const userList = await User.findAll();
         return res.status(200).json({
             message: "delete data succesfully",
-            data: userList
+            data: userList,
+            userId: req.user
         });
     }
     catch (err) {
@@ -89,7 +91,8 @@ const updateUser = async (req, res, next) => {
         console.log(data.dataValues, 'fsdfkjsldkfjsdf')
         res.status(200).json({
             message: "data updated sucessfully",
-            data: data?.dataValues
+            data: data?.dataValues,
+            userId: req.user
         })
     }
     catch (err) {
