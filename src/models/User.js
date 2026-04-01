@@ -29,4 +29,10 @@ const User = sequelize.define('UserTable',
         timestamps: true,
     }
 );
+
+User.sync().then((data) => {
+    console.log("Table and model synced successfully")
+}).catch((err) => {
+    console.error(err, "Error syncing the table and model")
+})
 module.exports = User;

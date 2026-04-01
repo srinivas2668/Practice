@@ -7,9 +7,8 @@ const authMiddleware = require("./middlewares/authMiddleware");
 app.use(express.json());
 require("./models/User"); // when we create table we need this  // for creating table use sequelize.sync();
 
-app.use('', authRouter)
-app.use('/usermanage',authMiddleware,userRouter);
-
+app.use('/auth', authRouter) // public
+app.use('/usermanage', authMiddleware, userRouter); // protected
 
 sequelize.authenticate()
     .then(() => {
