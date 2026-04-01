@@ -1,10 +1,18 @@
 const User = require("../models/User");
+const bcrypt = require("bcrypt");
 
-const createUser = (req, res, next) => {
-    User.create(req.body)
+const createUser = async (req, res, next) => {
+
+    const hashedPassword = await bcrypt.hash(req.body.password, 10);
+
+    const data = await User.create({
+        ...req.body,
+        password: hashedPassword
+    });
+
     res.json({
         message: "data saved sucessfully",
-        data: req.body
+        data: data?.dataValues
     })
 }
 
@@ -34,17 +42,13 @@ const getUserById = async (req, res, next) => {
 }
 
 const getUserAll = async (req, res, next) => {
+    console.log(req.user, 'adfjaslkfjasd')
     try {
-        const userList = await User.findAll(
-            {
-                where: {
-                    role: "client"
-                }
-            }
-        );
+        const userList = await User.findAll();
         return res.status(200).json({
             message: "Successfully got data",
-            data: userList
+            data: userList,
+            userId: req.user
         });
     } catch (err) {
         return res.status(500).json({
@@ -74,13 +78,18 @@ const deleteUser = async (req, res, next) => {
 
 const updateUser = async (req, res, next) => {
     const { userId } = req.params;
-    console.log(userId, req.body, 'fafjslkjfs')
-    {/* 
     try {
-        await User.update({
-            where: {
-                id: userId
-            }
+        const user = await User.findByPk(userId);
+        if (!user) {
+            res.status(500).json({
+                message: "user Id not Found",
+            })
+        }
+        const data = await user.update(req?.body);
+        console.log(data.dataValues, 'fsdfkjsldkfjsdf')
+        res.status(200).json({
+            message: "data updated sucessfully",
+            data: data?.dataValues
         })
     }
     catch (err) {
@@ -89,7 +98,6 @@ const updateUser = async (req, res, next) => {
             error: err.message
         });
     }
-    */}
 }
 
 module.exports = { createUser, getUserById, getUserAll, deleteUser, updateUser };

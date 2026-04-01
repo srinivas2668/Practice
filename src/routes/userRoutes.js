@@ -3,16 +3,19 @@ const { createUser, getUserById, getUserAll, deleteUser, updateUser } = require(
 const userRouter = express.Router();
 const multer = require('multer');
 const User = require("../models/User");
+const { protectData } = require("../controllers/authController");
 const upload = multer();
 
-userRouter.post('/createuser', upload.none(), createUser);
+userRouter.post('/createuser', upload.none(), protectData, createUser);
 
-userRouter.get('/userslist', getUserAll);
+userRouter.get('/userslist', protectData, getUserAll);
 
-userRouter.get("/:userId/userView", getUserById)
+userRouter.get("/:userId/userView", protectData, getUserById);
 
-userRouter.delete('/:userId/delete', deleteUser)
+userRouter.delete('/:userId/delete', protectData, deleteUser);
 
-userRouter.put('/:userId/edit', upload.none() ,getUserById ,updateUser)
+userRouter.get('/:userId/edit', protectData, getUserById);
+
+userRouter.patch('/:userId/edit', upload.none(), protectData, updateUser)
 
 module.exports = userRouter;
