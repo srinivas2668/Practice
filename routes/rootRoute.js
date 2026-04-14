@@ -1,6 +1,9 @@
+const authLogin = require("../src/authclient/routes/AuthLogin.route");
+require("../db/dbconnection")
+// require('../src')
 
-const rootRoute = (use) =>
-{
-
-}
-module.exports = rootRoute;
+module.exports = (app) => {
+  app.use("/authClient", authLogin);
+  // app.use("/cient/user", verifyAuth, userManagement);
+  
+};
